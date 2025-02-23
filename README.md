@@ -1,0 +1,2 @@
+# webScraper
+Web Scraper extension
