@@ -1,0 +1,23 @@
+{
+    "name": "Drupal Event Automation",
+    "author": "CacheOut",
+    "version": "1.0",
+    "manifest_version": 3.0,
+    "permissions": ["permission 1", "permission 2"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon_comment": {
+            "24": "mainIcons/gear24.png",
+            "32": "mainIcons/gear32.png",
+            "64": "mainIcons/gear64.png",
+            "128": "mainIcons/gear128.png"
+        }
+    },
+    "icons": {
+        "24": "mainIcons/gear24.png",
+        "32": "mainIcons/gear32.png",
+        "64": "mainIcons/gear64.png",
+        "128": "mainIcons/gear128.png"
+    },
+    "host_permissions": ["https://*/*", "http://*/*"]
+}
