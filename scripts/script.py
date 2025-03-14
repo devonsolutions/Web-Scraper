@@ -8,14 +8,17 @@ page = requests.get(URL)
 soup = BeautifulSoup(page.content, "html.parser")
 
 drupalDocuments = soup.find_all(href=re.compile("/sites"))
-print(drupalDocuments)
+# print(drupalDocuments)
 
-sharepointDocuments = print(soup.find_all(href=re.compile("/StanStatePublicDocs")))
-print(sharepointDocuments)
+sharepointDocuments = soup.find_all(href=re.compile("/StanStatePublicDocs"))
+# print(sharepointDocuments)
 
-# Handling Network Errors, Politeness and Rate Limiting 
-# https://medium.com/@spaw.co/how-to-scrape-multiple-pages-using-beautifulsoup-42d944847fac
+
+
+# .prettify() doesn't work because findAll returns a list of match tags
 
 # Scraping Multiple Web Pages
 # https://www.freecodecamp.org/news/how-to-scrape-multiple-web-pages-using-python/
- 
+
+# Handling Network Errors, Politeness and Rate Limiting 
+# https://medium.com/@spaw.co/how-to-scrape-multiple-pages-using-beautifulsoup-42d944847fac
