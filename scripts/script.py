@@ -12,3 +12,10 @@ print(drupalDocuments)
 
 sharepointDocuments = print(soup.find_all(href=re.compile("/StanStatePublicDocs")))
 print(sharepointDocuments)
+
+# Handling Network Errors, Politeness and Rate Limiting 
+# https://medium.com/@spaw.co/how-to-scrape-multiple-pages-using-beautifulsoup-42d944847fac
+
+# Scraping Multiple Web Pages
+# https://www.freecodecamp.org/news/how-to-scrape-multiple-web-pages-using-python/
+ 
