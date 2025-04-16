@@ -5,10 +5,25 @@ import numpy as np
 import re
 
 # VERSION 3: singular page
+
 # To-Do List:
 # Evaluate href values as a boolean (add links to list in order)
 # Add document name values to list
-# Add 
+# Add document link values to list
+# Check that the correct values are being added to the correct lists
+# Create dataframe
+# Add lists (columns) to dataframe
+# Print dataframe
+# Save dataframe to excel sheet
+# Generate excel sheet
+# Unit tests
+# Pagination (multiple pages)
+
+# https://python.plainenglish.io/scraping-data-from-the-web-with-pythons-beautifulsoup-2428fdc97ece
+# https://www.crummy.com/software/BeautifulSoup/bs4/doc/#a-function
+# https://scrapeops.io/python-web-scraping-playbook/python-beautifulsoup-findall/
+# https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
+
 
 url = input("Enter the department link address ")
 page = requests.get(url)
@@ -51,7 +66,6 @@ else:
     # On the Excel sheet, if there are no D10 or SharePoint documents, the program will generate an empty Excel sheet template
 
 
-
 '''
 VERSION 1
 
@@ -75,9 +89,7 @@ drupalLinks = pd.Series((drupalLinks), name="Drupal Documents")
 sharepointLinks = pd.Series((sharepointLinks), name="SharePoint Documents")
 
 result = (pd.concat([drupalLinks, sharepointLinks], axis=1)).to_excel("Links.xlsx")
-'''
 
-'''
 VERSION 2
 
 doc_name = soup.find(href=re.compile("/StanStatePublicDocs")).text
