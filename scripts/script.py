@@ -84,7 +84,6 @@ totalLinks = pd.Series(totalLinks, name="Link Addresses")
 totalLinks = totalLinks.to_excel("Links.xlsx")
 print('The links were documented in the Excel File successfully.')
 
-
 drupalLinks = pd.Series((drupalLinks), name="Drupal Documents")
 sharepointLinks = pd.Series((sharepointLinks), name="SharePoint Documents")
 
@@ -95,18 +94,11 @@ VERSION 2
 doc_name = soup.find(href=re.compile("/StanStatePublicDocs")).text
 print(doc_name)
 
-parent_page, child_page, doc_name, doc_link, migrated_status, deletion_status = [], [], [], [], [], []
-
 parent_page.append(soup.find(class_='nav navbar-nav').text)
 parent_page = soup.find(class_='nav navbar-nav').text
 
 child_page = soup.find(class_='dropdown-link').text
 child_page.append( ().find('a') )
-
-doc_name.append(soup.find('a')
-doc_link.append( ().find('a') )
-migrated_status.append(None)
-deletion_status.append(None)
 
 df = pd.DataFrame(parent_page, columns = ['Parent Page'])
 
