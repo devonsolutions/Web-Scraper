@@ -25,11 +25,7 @@ else:
     print("Links NOT present.")
 
 '''
-
 COMPILING COLUMN VALUES (VERSION 2)
-
-doc_name = soup.find(href=re.compile("/StanStatePublicDocs")).text
-print(doc_name)
 
 parent_page.append(soup.find(class_='nav navbar-nav').text)
 parent_page = soup.find(class_='nav navbar-nav').text
@@ -57,5 +53,4 @@ df = pd.DataFrame(parent_page, columns = ['Parent Page'])
 
 df['Child Page'], df['Document Name'], = child_page, doc_name
 df['Document Link'], df['Migrated to SP'], df['Deleted off D10'], = doc_link, migrated_status, deletion_status
-
 '''
