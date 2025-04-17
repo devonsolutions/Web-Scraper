@@ -15,12 +15,12 @@ relevant_links = soup.find_all(href=link_patterns)
 
 if len(relevant_links) != 0:
     for relevant_link in relevant_links:
-        doc_link.append()
-        doc_name.append(None)
-        # print(doc_name)
-        print(relevant_link)
-    
-    print("Links PRESENT.")
+        doc_link.append(relevant_link.get('href'))
+        doc_name.append('')
+        # print(relevant_link)
+    print(doc_link)
+    # print(relevant_links)
+    # print("Links PRESENT.")
 else:
     print("Links NOT present.")
 
