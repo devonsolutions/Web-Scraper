@@ -47,3 +47,7 @@ df['Migrated to SP'] = migration_status
 df['Deleted off D10'] =  deletion_status
 
 df = df.to_excel("Documents.xlsx")
+
+# excel sheet should save to downloads (research python library os)
+# Add colors to top row
+# Set up column width auto-fit
