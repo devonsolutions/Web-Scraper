@@ -12,10 +12,9 @@ soup = BeautifulSoup(page.content, "html.parser")
 parent_pages, child_pages = [], []
 
 '''
-Use regex to assign which page is going to be scanned next (nav menu info)
-
-# replace '/asi' with pop(3) of department address
-parent_patterns = re.compile(r'/asi/')
+department_url = re.split(r'/', department_address)
+department_url = department_url.pop(3)
+parent_patterns = re.compile(r'/'+ department_url +'/')
 parent_links = soup.find_all(href=parent_patterns)
 
 for parent_link in parent_links:
