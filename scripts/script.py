@@ -5,49 +5,64 @@ import numpy as np
 import re
 import openpyxl
 
-# use regex to assign which page is going to be scanned next (nav menu info)
-# use regex to create a mass downloader
-
 department_address = input("Enter the department link address ")
 page = requests.get(department_address)
 soup = BeautifulSoup(page.content, "html.parser")
 
-parent_pattern = re.compile(r'___')
-child_pattern = re.compile(r'____')
+parent_pages, child_pages = [], []
+
+'''
+Use regex to assign which page is going to be scanned next (nav menu info)
+
+parent_html = re.find_all()
+parent_links = 
+
+
+
+
+child_html = 
+child_pattern = 
+
+excel_html = soup.find(class_="block-title text-link-black display-2")
+excel_name = excel_html.get_text()
+
+'''
+
+link_name, link_address, migration_status, deletion_status = [], [], [], []
 
 link_patterns = re.compile(r'sites|StanStatePublicDocs')
 relevant_links = soup.find_all(href=link_patterns)
 
-parent_pages, child_pages = [], []
-
-link_name, link_address, migration_status, deletion_status = [], [], [], []
-
-if len(relevant_links) != 0:
-    for relevant_link in relevant_links:
-        link_name.append(relevant_link.get_text())
-        link_address.append(relevant_link.get('href'))
+def addColumnValues():
+    if len(relevant_links) != 0:
+        for relevant_link in relevant_links:
+            link_name.append(relevant_link.get_text())
+            link_address.append(relevant_link.get('href'))
+            migration_status.append(' ')
+            deletion_status.append(' ')
+            parent_pages.append(' ') # remove once pagination is set
+            child_pages.append(' ') # remove once pagination is set
+    else:
+        link_name.append('No links present on this page.')
+        link_address.append(' ')
         migration_status.append(' ')
         deletion_status.append(' ')
         parent_pages.append(' ') # remove once pagination is set
         child_pages.append(' ') # remove once pagination is set
-else:
-    link_name.append('No links present on this page.')
-    link_address.append(' ')
-    migration_status.append(' ')
-    deletion_status.append(' ')
-    parent_pages.append(' ') # remove once pagination is set
-    child_pages.append(' ') # remove once pagination is set
-    print("No links present on this page.")
+        print("No links present on this page.")
 
-df = pd.DataFrame(parent_pages, columns = ['Parent Pages'])
-df['Child Pages'] = child_pages
-df['Link Name'] = link_name
-df['Link Address'] = link_address
-df['Migrated to SP'] = migration_status
-df['Deleted off D10'] =  deletion_status
+def createDataFrame():
+    df = pd.DataFrame(parent_pages, columns = ['Parent Pages'])
+    df['Child Pages'] = child_pages
+    df['Link Name'] = link_name
+    df['Link Address'] = link_address
+    df['Migrated to SP'] = migration_status
+    df['Deleted off D10'] =  deletion_status
 
-df = df.to_excel("Documents.xlsx")
+    excel_html = soup.find(class_="block-title text-link-black display-2")
+    excel_name = excel_html.get_text()
 
-# excel sheet should save to downloads (research python library os)
-# Add colors to top row
-# Set up column width auto-fit
+    df = df.to_excel(excel_name + ".xlsx")
+
+addColumnValues()
+createDataFrame()
