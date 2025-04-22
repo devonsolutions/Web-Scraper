@@ -8,16 +8,9 @@ ____________________________________________
 
 TO-DO LIST
 
-Finishing code
-- Add document name values to list
-- Add document link values to list
-
-Excel Sheet Generator
-- Create dataframe
-- Add lists (columns) to dataframe
-- Print dataframe
-- Save dataframe to excel sheet
-- Generate excel sheet
+# excel sheet should save to downloads (research python library os)
+# Add colors to top row
+# Set up column width auto-fit
 
 Unit tests
 - add to code
@@ -26,6 +19,8 @@ Pagination
 - homepage is scanned (scanner grabs and assigns values to parent pages)
 - next parent page is scanned (scanner grabs and assigns values to child pages)
 - child page is scanned (scanner moves to the next parent page)
+
+# use regex to create a mass downloader
 
 ____________________________________________
 
