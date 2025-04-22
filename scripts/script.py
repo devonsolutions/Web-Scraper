@@ -11,7 +11,6 @@ soup = BeautifulSoup(page.content, "html.parser")
 
 parent_pages, child_pages = [], []
 
-'''
 department_url = re.split(r'/', department_address)
 department_url = department_url.pop(3)
 parent_patterns = re.compile(r'/'+ department_url +'/')
@@ -62,3 +61,4 @@ def createDataFrame():
 
 addColumnValues()
 createDataFrame()
+'''
