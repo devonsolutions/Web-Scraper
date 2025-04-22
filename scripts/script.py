@@ -11,18 +11,19 @@ soup = BeautifulSoup(page.content, "html.parser")
 
 parent_pages, child_pages = [], []
 
-# nav_bars = soup.find_all(class_="nav navbar-nav")
-# nav_items = nav_links.find_all(class_="nav-item")
-# after cutting down size of links, then look for links that match the re pattern
-department_url = re.split(r'/', department_address)
-department_url = department_url.pop(3)
-parent_patterns = re.compile(r'/'+ department_url +'/')
-parent_links = soup.find_all(href=parent_patterns)
+def findNavLinks():
+    # navBar_links = soup.find_all(class_="nav navbar-nav")
+    # navItem_links = nav_links.find_all(class_="nav-item")
+    # after cutting down size of links, look for links that match the re pattern
+    department_url = re.split(r'/', department_address)
+    department_url = department_url.pop(3)
+    parent_patterns = re.compile(r'/'+ department_url +'/')
+    parent_links = soup.find_all(href=parent_patterns)
 
-for parent_link in parent_links:
-   parent_pages.append(parent_link.get('href'))
-    
-print(parent_pages)
+    for parent_link in parent_links:
+        parent_pages.append(parent_link.get('href'))
+        
+    print(parent_pages)
 
 '''
 
@@ -65,3 +66,5 @@ def createDataFrame():
 addColumnValues()
 createDataFrame()
 '''
+
+findNavLinks()
