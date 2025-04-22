@@ -11,6 +11,9 @@ soup = BeautifulSoup(page.content, "html.parser")
 
 parent_pages, child_pages = [], []
 
+# nav_bars = soup.find_all(class_="nav navbar-nav")
+# nav_items = nav_links.find_all(class_="nav-item")
+# after cutting down size of links, then look for links that match the re pattern
 department_url = re.split(r'/', department_address)
 department_url = department_url.pop(3)
 parent_patterns = re.compile(r'/'+ department_url +'/')
