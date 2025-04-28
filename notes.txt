@@ -4,13 +4,16 @@ Wellness WORKS! (no links) - https://www.csustan.edu/wellness-works
 Student Government (a few links) - https://www.csustan.edu/asi/student-government
 Bid & Bid Results (a lot of links) - https://www.csustan.edu/financial-support-services/procurement-contract-services/bid-bid-results
 
+Multiple parent pages + child pages (PAGINATION TEST) https://www.csustan.edu/writing-program/student-resources
+
 ____________________________________________
 
 TO-DO LIST
 
-# excel sheet should save to downloads (research python library os)
+# excel sheet should save to downloads (research python library os, check MEDIUM articles)
 # Add colors to top row
 # Set up column width auto-fit
+# set up pagination for child pages
 
 Unit tests
 - add to code
