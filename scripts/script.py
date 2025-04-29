@@ -6,7 +6,6 @@ import re
 import openpyxl
 
 department_address = input("Enter the department link address ")
-
 page = requests.get(department_address)
 soup = BeautifulSoup(page.content, "html.parser")
 
@@ -42,7 +41,7 @@ for parent_page in parent_pages:
         link_address.append(' ')
         migration_status.append(' ')
         deletion_status.append(' ')
-'''
+
 df = pd.DataFrame(parent_pages, columns = ['Parent Pages'])
 df['Link Name'] = link_name
 df['Link Address'] = link_address
@@ -53,4 +52,3 @@ excel_html = soup.find(class_="block-title text-link-black display-2")
 excel_name = excel_html.get_text()
 
 df = df.to_excel(excel_name + ".xlsx")
-'''
