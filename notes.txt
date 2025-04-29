@@ -18,7 +18,7 @@ TO-DO LIST
 Unit tests
 - add to code
 
-Pagination
+Pagination (set up functions)
 - homepage is scanned (scanner grabs and assigns values to parent pages)
 - next parent page is scanned (scanner grabs and assigns values to child pages)
 - child page is scanned (scanner moves to the next parent page)
