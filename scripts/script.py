@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import re
 import openpyxl
+import os
 
 department_address = input("Enter the department link address ")
 page = requests.get(department_address)
@@ -31,8 +32,11 @@ df['Link Address'] = link_address
 df['Migrated to SP'] = migration_status
 df['Deleted off D10'] =  deletion_status
 
-excel_name = department_address.replace("https://www.csustan.edu/financial-support-services/procurement-contract-services/", " ")
+excel_name = department_address.replace("https://www.csustan.edu/financial-support-services/procurement-contract-services/", "")
 
-df = df.to_excel(excel_name + ".xlsx")
+file_path = "\\Users\\Work Account\\Downloads\\"
+file = os.path.join(file_path, excel_name)
 
+df = df.to_excel(file + ".xlsx")
 
+print("Downloaded: " + str(file))
