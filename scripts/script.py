@@ -15,7 +15,7 @@ link_name, link_address, migration_status, deletion_status = [], [], [], []
 link_patterns = re.compile(r'sites|StanStatePublicDocs')
 relevant_links = soup.find_all(href=link_patterns)
 
-if len(relevant_links) != 0:
+if relevant_links:
     for relevant_link in relevant_links:
         link_name.append(relevant_link.get_text())
         link_address.append(relevant_link.get('href'))
@@ -34,7 +34,7 @@ df['Deleted off D10'] =  deletion_status
 
 excel_name = department_address.replace("https://www.csustan.edu/financial-support-services/procurement-contract-services/", "")
 
-file_path = "\\Users\\Work Account\\Downloads\\"
+file_path = "/Users/jerynnecenario/Downloads/"
 file = os.path.join(file_path, excel_name)
 
 df = df.to_excel(file + ".xlsx")
