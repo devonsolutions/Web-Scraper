@@ -4,33 +4,32 @@ Wellness WORKS! (no links) - https://www.csustan.edu/wellness-works
 Student Government (a few links) - https://www.csustan.edu/asi/student-government
 Bid & Bid Results (a lot of links) - https://www.csustan.edu/financial-support-services/procurement-contract-services/bid-bid-results
 
+Multiple parent pages + child pages (PAGINATION TEST) https://www.csustan.edu/writing-program/student-resources
+
 ____________________________________________
 
 TO-DO LIST
 
-Finishing code
-- Add document name values to list
-- Add document link values to list
-
-Excel Sheet Generator
-- Create dataframe
-- Add lists (columns) to dataframe
-- Print dataframe
-- Save dataframe to excel sheet
-- Generate excel sheet
+# excel sheet should save to downloads (research python library os, check MEDIUM articles)
+# Add colors to top row
+# Set up column width auto-fit
+# set up pagination for child pages
 
 Unit tests
 - add to code
 
-Pagination
+Pagination (set up functions)
 - homepage is scanned (scanner grabs and assigns values to parent pages)
 - next parent page is scanned (scanner grabs and assigns values to child pages)
 - child page is scanned (scanner moves to the next parent page)
+
+# use regex to create a mass downloader
 
 ____________________________________________
 
 SOURCES
 
+https://stackoverflow.com/questions/475675/when-is-a-function-too-long
 https://python.plainenglish.io/scraping-data-from-the-web-with-pythons-beautifulsoup-2428fdc97ece
 https://www.crummy.com/software/BeautifulSoup/bs4/doc/#a-function
 https://scrapeops.io/python-web-scraping-playbook/python-beautifulsoup-findall/
