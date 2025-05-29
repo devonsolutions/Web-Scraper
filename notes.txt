@@ -1,3 +1,9 @@
+PAGINATION PROBLEMS
+
+1. If there are internal links used on the page (asi homepage, jobs), then it will get considered as a nav-item
+
+__________________________
+
 OS File Path
 
 For Work Mac: "/Users/jerynnecenario/Downloads/"
