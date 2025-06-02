@@ -27,9 +27,8 @@ department_url = "/" + department_url + "/"
 
 for nav_href in nav_hrefs:
     if type(nav_href) == str:
-        #print(nav_href)
-        #print(type(nav_href))
         if department_url in nav_href:
+            nav_href = "https://csustan.edu" + nav_href
             parent_pages.append(nav_href)
     else:
         pass
