@@ -7,34 +7,34 @@ import openpyxl
 import os
 from collections.abc import Iterable
 
-department_address = input("Enter the department link address ")
+departmentURL = input("Enter the department link address ")
 
-page = requests.get(department_address)
-soup = BeautifulSoup(page.content, "html.parser")
+requestPage = requests.get(departmentURL)
+pageHTML = BeautifulSoup(requestPage.content, "html.parser")
 
-nav_links = soup.find_all(class_="nav-link")
+navLinks = pageHTML.find_all(class_="nav-link")
 
-nav_hrefs = []
+navHREFs = []
 
-for nav_link in nav_links:
-    nav_hrefs.append(nav_link.get('href'))
+for navLink in navLinks:
+    navHREFs.append(navLink.get('href'))
 
-parent_pages = []
+parentPages = []
 
-department_url = re.split(r'/', department_address)
-department_url = department_url.pop(3)
-department_url = "/" + department_url + "/"
+departmentPath = re.split(r'/', departmentURL)
+departmentPath = departmentPath.pop(3)
+departmentPath = "/" + departmentPath + "/"
 
-for nav_href in nav_hrefs:
-    if type(nav_href) == str:
-        if department_url in nav_href:
-            nav_href = "https://csustan.edu" + nav_href
-            parent_pages.append(nav_href)
+for navHREF in navHREFs:
+    if type(navHREF) == str:
+        if departmentPath in navHREF:
+            navHREF = "https://csustan.edu" + navHREF
+            parentPages.append(navHREF)
     else:
         pass
     
-for parent_page in parent_pages:
-    print(parent_page)
+for parentPage in parentPages:
+    print(parentPage)
 
 '''
 
