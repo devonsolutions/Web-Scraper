@@ -6,10 +6,11 @@ import re
 import openpyxl
 import os
 from collections.abc import Iterable
+import certifi
 
 departmentURL = input("Enter the department link address ")
 
-requestPage = requests.get(departmentURL)
+requestPage = requests.get(departmentURL, verify=certifi.where())
 pageHTML = BeautifulSoup(requestPage.content, "html.parser")
 
 navLinks = pageHTML.find_all(class_="nav-link")
@@ -25,16 +26,41 @@ departmentPath = re.split(r'/', departmentURL)
 departmentPath = departmentPath.pop(3)
 departmentPath = "/" + departmentPath + "/"
 
+
 for navHREF in navHREFs:
     if type(navHREF) == str:
         if departmentPath in navHREF:
-            navHREF = "https://csustan.edu" + navHREF
+            navHREF = "https://www.csustan.edu" + navHREF
             parentPages.append(navHREF)
     else:
         pass
-    
+
+allLinks = []
+
 for parentPage in parentPages:
-    print(parentPage)
+    allLinks.append(parentPage)
+    requestParentPage = requests.get(parentPage, verify=certifi.where())
+    pageHTML = BeautifulSoup(requestParentPage.content, "html.parser")
+
+    dropdownITEMS = pageHTML.find_all(class_="dropdown-item")
+
+    for dropdownITEM in dropdownITEMS:
+        dropdownITEM_Links = dropdownITEM.find_all("a")
+        childHREFS = []
+
+        for dropdownITEM_Link in dropdownITEM_Links:
+            childHREFS.append(dropdownITEM_Link.get('href'))
+
+        for childHREF in childHREFS:
+            if type(childHREF) == str:
+                if departmentPath in childHREF:
+                    childHREF = "https://www.csustan.edu" + childHREF
+                    allLinks.append(childHREF)
+                else:
+                    pass
+            
+for allLink in allLinks:
+    print(allLink)
 
 '''
 
