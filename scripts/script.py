@@ -58,25 +58,18 @@ for parentPage in parentPages:
                     allLinks.append(childHREF)
                 else:
                     pass
-            
-for allLink in allLinks:
-    print(allLink)
-
-'''
 
 link_name, link_address, migration_status, deletion_status = [], [], [], []
 
-def store_page():
-    global soup
-    page = requests.get(department_address)
+for allLink in allLinks:
+    print(allLink)
+
+    page = requests.get(allLink)
     soup = BeautifulSoup(page.content, "html.parser")
 
-def compile_links():
-    global relevant_links
     link_patterns = re.compile(r'sites|StanStatePublicDocs')
     relevant_links = soup.find_all(href=link_patterns)
 
-def add():
     if relevant_links:
         for relevant_link in relevant_links:
             link_name.append(relevant_link.get_text())
@@ -89,16 +82,12 @@ def add():
         migration_status.append(' ')
         deletion_status.append(' ')
 
-store_page()
-compile_links()
-add()
-
 df = pd.DataFrame(link_name, columns = ['Link Name'])
 df['Link Address'] = link_address
 df['Migrated to SP'] = migration_status
 df['Deleted off D10'] =  deletion_status
 
-excel_name = department_address.replace("https://www.csustan.edu/financial-support-services/procurement-contract-services/", "")
+excel_name = departmentURL.replace("https://www.csustan.edu/", "")
 
 file_path = "/Users/jerynnecenario/Downloads/"
 file = os.path.join(file_path, excel_name)
@@ -106,4 +95,3 @@ file = os.path.join(file_path, excel_name)
 df = df.to_excel(file + ".xlsx")
 
 print("Downloaded: " + str(file))
-'''
