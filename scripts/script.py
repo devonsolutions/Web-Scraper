@@ -77,7 +77,7 @@ for allLink in allLinks:
             migration_status.append(' ')
             deletion_status.append(' ')
     else:
-        link_name.append('No links present on this page.')
+        link_name.append(link_name + ': No links present on this page.')
         link_address.append(' ')
         migration_status.append(' ')
         deletion_status.append(' ')
