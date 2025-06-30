@@ -59,7 +59,7 @@ for parentPage in parentPages:
                 else:
                     pass
 
-link_name, link_address, migration_status, deletion_status = [], [], [], []
+page_name, link_name, link_address, migration_status, deletion_status = [], [], [], [], []
 
 for allLink in allLinks:
     print(allLink)
@@ -72,17 +72,20 @@ for allLink in allLinks:
 
     if relevant_links:
         for relevant_link in relevant_links:
+            page_name.append(allLink)
             link_name.append(relevant_link.get_text())
             link_address.append(relevant_link.get('href'))
             migration_status.append(' ')
             deletion_status.append(' ')
     else:
-        link_name.append(link_name + ': No links present on this page.')
+        page_name.append(allLink)
+        link_name.append('No links present on this page.')
         link_address.append(' ')
         migration_status.append(' ')
         deletion_status.append(' ')
 
-df = pd.DataFrame(link_name, columns = ['Link Name'])
+df = pd.DataFrame(page_name, columns = ['Page Name'])
+df['Link Name'] = link_name
 df['Link Address'] = link_address
 df['Migrated to SP'] = migration_status
 df['Deleted off D10'] =  deletion_status
