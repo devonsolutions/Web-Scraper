@@ -26,12 +26,19 @@ departmentPath = re.split(r'/', departmentURL)
 departmentPath = departmentPath.pop(3)
 departmentPath = "/" + departmentPath + "/"
 
+csustanPath = "https://www.csustan.edu"
 
 for navHREF in navHREFs:
     if type(navHREF) == str:
         if departmentPath in navHREF:
-            navHREF = "https://www.csustan.edu" + navHREF
-            parentPages.append(navHREF)
+            if csustanPath in navHREF:
+                pass
+            else:
+                navHREF = "https://www.csustan.edu" + navHREF
+                parentPages.append(navHREF)
+                print(navHREF)
+        else:
+            pass
     else:
         pass
 
@@ -62,8 +69,6 @@ for parentPage in parentPages:
 page_name, link_name, link_address, migration_status, deletion_status = [], [], [], [], []
 
 for allLink in allLinks:
-    print(allLink)
-
     page = requests.get(allLink)
     soup = BeautifulSoup(page.content, "html.parser")
 
