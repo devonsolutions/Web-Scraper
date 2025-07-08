@@ -34,7 +34,7 @@ for navHREF in navHREFs:
             if csustanPath in navHREF:
                 pass
             else:
-                navHREF = "https://www.csustan.edu" + navHREF
+                navHREF = csustanPath + navHREF
                 parentPages.append(navHREF)
                 print(navHREF)
         else:
@@ -61,8 +61,9 @@ for parentPage in parentPages:
         for childHREF in childHREFS:
             if type(childHREF) == str:
                 if departmentPath in childHREF:
-                    childHREF = "https://www.csustan.edu" + childHREF
+                    childHREF = csustanPath + childHREF
                     allLinks.append(childHREF)
+                    print(childHREF)
                 else:
                     pass
 
@@ -72,7 +73,7 @@ for allLink in allLinks:
     page = requests.get(allLink)
     soup = BeautifulSoup(page.content, "html.parser")
 
-    link_patterns = re.compile(r'sites|StanStatePublicDocs')
+    link_patterns = re.compile(r'sites|StanStatePublicDocs|pdf')
     relevant_links = soup.find_all(href=link_patterns)
 
     if relevant_links:
