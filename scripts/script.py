@@ -73,7 +73,7 @@ for allLink in allLinks:
     page = requests.get(allLink)
     soup = BeautifulSoup(page.content, "html.parser")
 
-    link_patterns = re.compile(r'sites|StanStatePublicDocs|pdf')
+    link_patterns = re.compile(r'sites|sharepoint|pdf')
     relevant_links = soup.find_all(href=link_patterns)
 
     if relevant_links:
