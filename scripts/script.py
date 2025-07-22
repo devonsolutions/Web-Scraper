@@ -45,6 +45,7 @@ for navHREF in navHREFs:
 allLinks = []
 
 for parentPage in parentPages:
+    print(parentPage)
     allLinks.append(parentPage)
     requestParentPage = requests.get(parentPage, verify=certifi.where())
     pageHTML = BeautifulSoup(requestParentPage.content, "html.parser")
@@ -52,6 +53,7 @@ for parentPage in parentPages:
     dropdownITEMS = pageHTML.find_all(class_="dropdown-item")
 
     for dropdownITEM in dropdownITEMS:
+        print(dropdownITEM)
         dropdownITEM_Links = dropdownITEM.find_all("a")
         childHREFS = []
 
@@ -59,6 +61,7 @@ for parentPage in parentPages:
             childHREFS.append(dropdownITEM_Link.get('href'))
 
         for childHREF in childHREFS:
+            print(childHREF)
             if type(childHREF) == str:
                 if departmentPath in childHREF:
                     childHREF = csustanPath + childHREF
