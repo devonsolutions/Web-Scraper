@@ -1,42 +1,104 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import numpy as np
 import re
-import openpyxl
 import os
+import certifi
+import openpyxl
 
-department_address = input("Enter the department link address ")
-page = requests.get(department_address)
-soup = BeautifulSoup(page.content, "html.parser")
+departmentLinkAddress = input("Enter the department link address ")
 
-link_name, link_address, migration_status, deletion_status = [], [], [], []
+homePageRequest = requests.get(departmentLinkAddress, verify=certifi.where())
+pageHTML = BeautifulSoup(homePageRequest.content, "html.parser")
 
-link_patterns = re.compile(r'sites|StanStatePublicDocs')
-relevant_links = soup.find_all(href=link_patterns)
+navigationLinks = pageHTML.find_all(class_="nav-link")
 
-if len(relevant_links) != 0:
-    for relevant_link in relevant_links:
-        link_name.append(relevant_link.get_text())
-        link_address.append(relevant_link.get('href'))
-        migration_status.append(' ')
-        deletion_status.append(' ')
-else:
-    link_name.append('No links present on this page.')
-    link_address.append(' ')
-    migration_status.append(' ')
-    deletion_status.append(' ')
+navigationHREFs = []
 
-df = pd.DataFrame(link_name, columns = ['Link Name'])
-df['Link Address'] = link_address
-df['Migrated to SP'] = migration_status
-df['Deleted off D10'] =  deletion_status
+for navigationLink in navigationLinks:
+    navigationHREFs.append(navigationLink.get('href'))
 
-excel_name = department_address.replace("https://www.csustan.edu/financial-support-services/procurement-contract-services/", "")
+departmentPath = re.split(r'/', departmentLinkAddress)
+departmentPath = departmentPath.pop(3)
+departmentPath = "/" + departmentPath + "/"
 
-file_path = "\\Users\\Work Account\\Downloads\\"
-file = os.path.join(file_path, excel_name)
+universityPath = "https://www.csustan.edu"
 
-df = df.to_excel(file + ".xlsx")
+parentPages = []
 
-print("Downloaded: " + str(file))
+for navigationHREF in navigationHREFs:
+    if type(navigationHREF) == str:
+        if departmentPath in navigationHREF:
+            if universityPath in navigationHREF:
+                pass
+            else:
+                navigationHREF = universityPath + navigationHREF
+                parentPages.append(navigationHREF)
+                print(navigationHREF)
+        else:
+            pass
+    else:
+        pass
+
+departmentPages = []
+
+for parentPage in parentPages:
+    departmentPages.append(parentPage)
+    parentPageRequest = requests.get(parentPage, verify=certifi.where())
+    pageHTML = BeautifulSoup(parentPageRequest.content, "html.parser")
+
+    dropdownItems = pageHTML.find_all(class_="dropdown-item")
+
+    for dropdownItem in dropdownItems:
+        dropdownItemLinks = dropdownItem.find_all("a")
+        childPageHREFs = []
+
+        for dropdownItemLink in dropdownItemLinks:
+            childPageHREFs.append(dropdownItemLink.get('href'))
+
+        for childPageHREF in childPageHREFs:
+            if type(childPageHREF) == str:
+                if departmentPath in childPageHREF:
+                    childPageHREF = universityPath + childPageHREF
+                    departmentPages.append(childPageHREF)
+                    print(childPageHREF)
+                else:
+                    pass
+
+pageName, linkName, linkAddress, migrationStatus, deletionStatus = [], [], [], [], []
+
+for departmentPage in departmentPages:
+    page = requests.get(departmentPage)
+    soup = BeautifulSoup(page.content, "html.parser")
+
+    linkPatterns = re.compile(r'sites|sharepoint|pdf|drive|doc')
+    relevantLinks = soup.find_all(href=linkPatterns)
+
+    if relevantLinks:
+        for relevantLink in relevantLinks:
+            pageName.append(departmentPage)
+            linkName.append(relevantLink.get_text())
+            linkAddress.append(relevantLink.get('href'))
+            migrationStatus.append(' ')
+            deletionStatus.append(' ')
+    else:
+        pageName.append(departmentPage)
+        linkName.append('No links present on this page.')
+        linkAddress.append(' ')
+        migrationStatus.append(' ')
+        deletionStatus.append(' ')
+
+dataFrame = pd.DataFrame(pageName, columns = ['Page Name'])
+dataFrame['Link Name'] = linkName
+dataFrame['Link Address'] = linkAddress
+dataFrame['Migrated to SP'] = migrationStatus
+dataFrame['Deleted off D10'] =  deletionStatus
+
+departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
+
+filePath = "/Users/jerynnecenario/Downloads/"
+fileName = os.path.join(filePath, departmentName)
+
+dataFrame = dataFrame.to_excel(fileName + ".xlsx")
+
+print("Downloaded: " + str(fileName))
