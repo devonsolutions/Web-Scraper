@@ -79,9 +79,15 @@ for departmentPage in departmentPages:
             pageName.append(departmentPage)
             linkName.append(relevantLink.get_text())
             linkAddress.append(relevantLink.get('href'))
+            # .append('') is necessary for the list to be translated into a dataframe column
+            migrationStatus.append('')
+            deletionStatus.append('')
+
     else:
         pageName.append(departmentPage)
         linkName.append('No links present on this page.')
+        migrationStatus.append('')
+        deletionStatus.append('')
 
 dataFrame = pd.DataFrame(pageName, columns = ['Page Name'])
 dataFrame['Link Name'] = linkName
