@@ -1,109 +1,104 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import numpy as np
 import re
-import openpyxl
 import os
-from collections.abc import Iterable
 import certifi
+import openpyxl
 
-departmentURL = input("Enter the department link address ")
+departmentLinkAddress = input("Enter the department link address ")
 
-requestPage = requests.get(departmentURL, verify=certifi.where())
-pageHTML = BeautifulSoup(requestPage.content, "html.parser")
+homePageRequest = requests.get(departmentLinkAddress, verify=certifi.where())
+pageHTML = BeautifulSoup(homePageRequest.content, "html.parser")
 
-navLinks = pageHTML.find_all(class_="nav-link")
+navigationLinks = pageHTML.find_all(class_="nav-link")
 
-navHREFs = []
+navigationHREFs = []
 
-for navLink in navLinks:
-    navHREFs.append(navLink.get('href'))
+for navigationLink in navigationLinks:
+    navigationHREFs.append(navigationLink.get('href'))
 
-parentPages = []
-
-departmentPath = re.split(r'/', departmentURL)
+departmentPath = re.split(r'/', departmentLinkAddress)
 departmentPath = departmentPath.pop(3)
 departmentPath = "/" + departmentPath + "/"
 
-csustanPath = "https://www.csustan.edu"
+universityPath = "https://www.csustan.edu"
 
-for navHREF in navHREFs:
-    if type(navHREF) == str:
-        if departmentPath in navHREF:
-            if csustanPath in navHREF:
+parentPages = []
+
+for navigationHREF in navigationHREFs:
+    if type(navigationHREF) == str:
+        if departmentPath in navigationHREF:
+            if universityPath in navigationHREF:
                 pass
             else:
-                navHREF = csustanPath + navHREF
-                parentPages.append(navHREF)
-                print(navHREF)
+                navigationHREF = universityPath + navigationHREF
+                parentPages.append(navigationHREF)
+                print(navigationHREF)
         else:
             pass
     else:
         pass
 
-allLinks = []
+departmentPages = []
 
 for parentPage in parentPages:
-    print(parentPage)
-    allLinks.append(parentPage)
-    requestParentPage = requests.get(parentPage, verify=certifi.where())
-    pageHTML = BeautifulSoup(requestParentPage.content, "html.parser")
+    departmentPages.append(parentPage)
+    parentPageRequest = requests.get(parentPage, verify=certifi.where())
+    pageHTML = BeautifulSoup(parentPageRequest.content, "html.parser")
 
-    dropdownITEMS = pageHTML.find_all(class_="dropdown-item")
+    dropdownItems = pageHTML.find_all(class_="dropdown-item")
 
-    for dropdownITEM in dropdownITEMS:
-        print(dropdownITEM)
-        dropdownITEM_Links = dropdownITEM.find_all("a")
-        childHREFS = []
+    for dropdownItem in dropdownItems:
+        dropdownItemLinks = dropdownItem.find_all("a")
+        childPageHREFs = []
 
-        for dropdownITEM_Link in dropdownITEM_Links:
-            childHREFS.append(dropdownITEM_Link.get('href'))
+        for dropdownItemLink in dropdownItemLinks:
+            childPageHREFs.append(dropdownItemLink.get('href'))
 
-        for childHREF in childHREFS:
-            print(childHREF)
-            if type(childHREF) == str:
-                if departmentPath in childHREF:
-                    childHREF = csustanPath + childHREF
-                    allLinks.append(childHREF)
-                    print(childHREF)
+        for childPageHREF in childPageHREFs:
+            if type(childPageHREF) == str:
+                if departmentPath in childPageHREF:
+                    childPageHREF = universityPath + childPageHREF
+                    departmentPages.append(childPageHREF)
+                    print(childPageHREF)
                 else:
                     pass
 
-page_name, link_name, link_address, migration_status, deletion_status = [], [], [], [], []
+pageName, linkName, linkAddress, migrationStatus, deletionStatus = [], [], [], [], []
 
-for allLink in allLinks:
-    page = requests.get(allLink)
+for departmentPage in departmentPages:
+    page = requests.get(departmentPage)
     soup = BeautifulSoup(page.content, "html.parser")
 
-    link_patterns = re.compile(r'sites|sharepoint|pdf')
-    relevant_links = soup.find_all(href=link_patterns)
+    linkPatterns = re.compile(r'sites|sharepoint|pdf|drive|doc')
+    relevantLinks = soup.find_all(href=linkPatterns)
 
-    if relevant_links:
-        for relevant_link in relevant_links:
-            page_name.append(allLink)
-            link_name.append(relevant_link.get_text())
-            link_address.append(relevant_link.get('href'))
-            migration_status.append(' ')
-            deletion_status.append(' ')
+    if relevantLinks:
+        for relevantLink in relevantLinks:
+            pageName.append(departmentPage)
+            linkName.append(relevantLink.get_text())
+            linkAddress.append(relevantLink.get('href'))
+            migrationStatus.append(' ')
+            deletionStatus.append(' ')
     else:
-        page_name.append(allLink)
-        link_name.append('No links present on this page.')
-        link_address.append(' ')
-        migration_status.append(' ')
-        deletion_status.append(' ')
+        pageName.append(departmentPage)
+        linkName.append('No links present on this page.')
+        linkAddress.append(' ')
+        migrationStatus.append(' ')
+        deletionStatus.append(' ')
 
-df = pd.DataFrame(page_name, columns = ['Page Name'])
-df['Link Name'] = link_name
-df['Link Address'] = link_address
-df['Migrated to SP'] = migration_status
-df['Deleted off D10'] =  deletion_status
+dataFrame = pd.DataFrame(pageName, columns = ['Page Name'])
+dataFrame['Link Name'] = linkName
+dataFrame['Link Address'] = linkAddress
+dataFrame['Migrated to SP'] = migrationStatus
+dataFrame['Deleted off D10'] =  deletionStatus
 
-excel_name = departmentURL.replace("https://www.csustan.edu/", "")
+departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
 
-file_path = "/Users/jerynnecenario/Downloads/"
-file = os.path.join(file_path, excel_name)
+filePath = "/Users/jerynnecenario/Downloads/"
+fileName = os.path.join(filePath, departmentName)
 
-df = df.to_excel(file + ".xlsx")
+dataFrame = dataFrame.to_excel(fileName + ".xlsx")
 
-print("Downloaded: " + str(file))
+print("Downloaded: " + str(fileName))
