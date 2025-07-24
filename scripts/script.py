@@ -8,8 +8,8 @@ import openpyxl
 
 departmentLinkAddress = input("Enter the department link address ")
 
-homePageRequest = requests.get(departmentLinkAddress, verify=certifi.where())
-pageHTML = BeautifulSoup(homePageRequest.content, "html.parser")
+accessRequest = requests.get(departmentLinkAddress, verify=certifi.where())
+pageHTML = BeautifulSoup(accessRequest.content, "html.parser")
 
 navigationLinks = pageHTML.find_all(class_="nav-link")
 
