@@ -74,6 +74,9 @@ for departmentPage in departmentPages:
     linkPatterns = re.compile(r'sites|sharepoint|pdf|drive|doc')
     relevantLinks = soup.find_all(href=linkPatterns)
 
+    # FUNCTIONS: https://learning.oreilly.com/library/view/python-programming-by/9789357053303/xhtml/chapter006.xhtml#ch6-6-7
+    # HYPERLINKS: https://datascientyst.com/create-clickable-link-pandas-dataframe-jupyterlab/
+
     if relevantLinks:
         for relevantLink in relevantLinks:
             pageName.append(departmentPage)
@@ -97,9 +100,13 @@ dataFrame['Deleted off D10'] =  deletionStatus
 
 departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
 
-filePath = "/Users/jerynnecenario/Downloads/"
-fileName = os.path.join(filePath, departmentName)
+folderPath = "/Users/jerynnecenario/Downloads/" + departmentName
 
-dataFrame = dataFrame.to_excel(fileName + ".xlsx")
+if not os.path.exists(folderPath):
+    os.makedirs(folderPath)
 
-print("Downloaded: " + str(fileName))
+filePath = os.path.join(folderPath, departmentName)
+
+dataFrame = dataFrame.to_excel(filePath + ".xlsx")
+
+print("Downloaded: " + str(filePath))
