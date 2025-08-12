@@ -65,7 +65,7 @@ for parentPage in parentPages:
                 else:
                     pass
 
-pageName, linkName, linkAddress, migrationStatus, deletionStatus = [], [], [], [], []
+pageName, pageLink, docName, docLink, migrationStatus, deletionStatus = [], [], [], [], [], []
 
 for departmentPage in departmentPages:
     page = requests.get(departmentPage)
@@ -73,30 +73,38 @@ for departmentPage in departmentPages:
 
     linkPatterns = re.compile(r'sites|sharepoint|pdf|drive|doc')
     relevantLinks = soup.find_all(href=linkPatterns)
-
+    
     # FUNCTIONS: https://learning.oreilly.com/library/view/python-programming-by/9789357053303/xhtml/chapter006.xhtml#ch6-6-7
     # HYPERLINKS: https://datascientyst.com/create-clickable-link-pandas-dataframe-jupyterlab/
 
     if relevantLinks:
         for relevantLink in relevantLinks:
-            pageName.append(departmentPage)
-            linkName.append(relevantLink.get_text())
-            linkAddress.append(relevantLink.get('href'))
+            #pageName.append(pageHTML.select('h1.title display-1')[0].text.strip())
+            pageName.append(soup.find('h1', class_= 'title'))
+            pageLink.append(departmentPage)
+            docName.append(relevantLink.get_text())
+            docLink.append(relevantLink.get('href'))
+
             # .append('') is necessary for the list to be translated into a dataframe column
             migrationStatus.append('')
             deletionStatus.append('')
 
     else:
-        pageName.append(departmentPage)
-        linkName.append('No links present on this page.')
+        #pageName.append(pageHTML.select('h1.title display-1')[0].text.strip())
+        pageName.append(soup.find('h1', class_= 'title'))
+        pageLink.append(departmentPage)
+        docName.append('No links present on this page.')
         migrationStatus.append('')
         deletionStatus.append('')
 
 dataFrame = pd.DataFrame(pageName, columns = ['Page Name'])
-dataFrame['Link Name'] = linkName
-dataFrame['Link Address'] = linkAddress
+dataFrame['Page Link'] = pageLink
+dataFrame['Document Name'] = docName
+dataFrame['Document Link'] = docLink
 dataFrame['Migrated to SP'] = migrationStatus
 dataFrame['Deleted off D10'] =  deletionStatus
+
+#HTML(dataFrame.to_html(render_links=True, escape=False))
 
 departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
 
