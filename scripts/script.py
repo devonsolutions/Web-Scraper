@@ -1,10 +1,10 @@
+from IPython.display import HTML
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
 import os
 import certifi
-import openpyxl
 
 departmentLinkAddress = input("Enter the department link address ")
 
@@ -104,7 +104,12 @@ dataFrame['Document Link'] = docLink
 dataFrame['Migrated to SP'] = migrationStatus
 dataFrame['Deleted off D10'] =  deletionStatus
 
-#HTML(dataFrame.to_html(render_links=True, escape=False))
+hyperlinks = []
+
+for pageName,pageLink in zip(dataFrame['Page Name'], dataFrame['Page Link']):
+    hyperlinks.append(f'=HYPERLINK("{pageLink}", "{pageName}") \n')
+
+dataFrame['Page Name'] = hyperlinks
 
 departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
 
@@ -115,6 +120,7 @@ if not os.path.exists(folderPath):
 
 filePath = os.path.join(folderPath, departmentName)
 
+dataFrame = dataFrame.drop('Page Link', axis=1)
 dataFrame = dataFrame.to_excel(filePath + ".xlsx")
 
 print("Downloaded: " + str(filePath))
