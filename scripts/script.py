@@ -7,6 +7,9 @@ import os
 import certifi
 
 departmentLinkAddress = input("Enter the department link address ")
+departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
+folderPath = input("What is your Downloads folder path?") + departmentName
+
 
 accessRequest = requests.get(departmentLinkAddress, verify=certifi.where())
 pageHTML = BeautifulSoup(accessRequest.content, "html.parser")
@@ -110,10 +113,6 @@ for pageName,pageLink in zip(dataFrame['Page Name'], dataFrame['Page Link']):
     hyperlinks.append(f'=HYPERLINK("{pageLink}", "{pageName}") \n')
 
 dataFrame['Page Name'] = hyperlinks
-
-departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
-
-folderPath = "/Users/jerynnecenario/Downloads/" + departmentName
 
 if not os.path.exists(folderPath):
     os.makedirs(folderPath)
