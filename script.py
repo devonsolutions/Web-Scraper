@@ -6,22 +6,22 @@ import os
 import certifi
 
 DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
-DEPARTMENT_NAME = departmentLinkAddress.replace("https://www.csustan.edu/", "")
-FOLDER_PATH = input("Enter your downloads folder path. ") + "/Downloads/" + departmentName
+DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu/", "")
+FOLDER_PATH = input("Enter your downloads folder path. ") + "/Downloads/" + DEPARTMENT_NAME
 
-ACCESS_REQUEST = requests.get(departmentLinkAddress, verify=certifi.where())
-PAGE_HTML = BeautifulSoup(accessRequest.content, "html.parser")
+ACCESS_REQUEST = requests.get(DEPARTMENT_LINK_ADDRESS, verify=certifi.where())
+PAGE_HTML = BeautifulSoup(ACCESS_REQUEST.content, "html.parser")
 
-navigation_links = pageHTML.find_all(class_="nav-link")
+navigation_links = PAGE_HTML.find_all(class_="nav-link")
 
 navigation_HREFs = []
 
 for navigation_link in navigation_links:
-    navigation_HREFs.append(navigationLink.get('href'))
+    navigation_HREFs.append(navigation_link.get('href'))
 
-department_path = re.split(r'/', departmentLinkAddress)
-department_path = departmentPath.pop(3)
-department_path = "/" + departmentPath + "/"
+department_path = re.split(r'/', DEPARTMENT_LINK_ADDRESS)
+department_path = department_path.pop(3)
+department_path = "/" + department_path + "/"
 
 UNIVERSITY_PATH = "https://www.csustan.edu"
 
@@ -34,7 +34,7 @@ for navigation_HREF in navigation_HREFs:
                 pass
             else:
                 navigation_HREF = UNIVERSITY_PATH + navigation_HREF
-                parentPages.append(navigation_HREF)
+                parent_pages.append(navigation_HREF)
                 print(navigation_HREF)
         else:
             pass
@@ -45,17 +45,17 @@ department_pages = []
 
 for parent_page in parent_pages:
     department_pages.append(parent_page)
-    parent_page_request = requests.get(parentPage, verify=certifi.where())
+    parent_page_request = requests.get(parent_page, verify=certifi.where())
     page_html = BeautifulSoup(parent_page_request.content, "html.parser")
 
-    dropdown_items = pageHTML.find_all(class_="dropdown-item")
+    dropdown_items = page_html.find_all(class_="dropdown-item")
 
     for dropdown_item in dropdown_items:
         dropdown_item_links = dropdown_item.find_all("a")
         child_page_HREFs = []
 
         for dropdown_item_link in dropdown_item_links:
-            child_page_HREFs.append(dropdownItemLink.get('href'))
+            child_page_HREFs.append(dropdown_item_link.get('href'))
 
         for child_page_HREF in child_page_HREFs:
             if type(child_page_HREF) == str:
@@ -73,7 +73,7 @@ for department_page in department_pages:
     soup = BeautifulSoup(page.content, "html.parser")
 
     LINK_PATTERNS = re.compile(r'sites|sharepoint|pdf|drive|doc')
-    relevant_links = soup.find_all(href=linkPatterns)
+    relevant_links = soup.find_all(href=LINK_PATTERNS)
 
     if relevant_links:
         for relevant_link in relevant_links:
