@@ -1,6 +1,7 @@
-import requests
 from bs4 import BeautifulSoup
+from pathlib import Path
 import pandas as pd
+import requests
 import re
 import os
 import certifi
@@ -8,7 +9,8 @@ import certifi
 UNIVERSITY_PATH = "https://www.csustan.edu"
 DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
 DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu/", "")
-FOLDER_PATH = input("Enter your downloads folder path. ") + "/Downloads/" + DEPARTMENT_NAME
+
+FOLDER_PATH = str(Path.home() / "Downloads") + "/" + DEPARTMENT_NAME
 
 ACCESS_REQUEST = requests.get(DEPARTMENT_LINK_ADDRESS, verify=certifi.where())
 PAGE_HTML = BeautifulSoup(ACCESS_REQUEST.content, "html.parser")
@@ -28,9 +30,9 @@ parent_pages = []
 
 for navigation_HREF in navigation_HREFs:
     if type(navigation_HREF) == str and UNIVERSITY_PATH and department_path in navigation_HREF:
-            navigation_HREF = UNIVERSITY_PATH + navigation_HREF
-            parent_pages.append(navigation_HREF)
-            print(navigation_HREF)
+        navigation_HREF = UNIVERSITY_PATH + navigation_HREF
+        parent_pages.append(navigation_HREF)
+        print(navigation_HREF)
     else:
         pass
 
