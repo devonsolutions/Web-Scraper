@@ -1,15 +1,17 @@
+from IPython.display import HTML
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
 import os
 import certifi
-import openpyxl
 
 departmentLinkAddress = input("Enter the department link address ")
+departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
+folderPath = input("What is your Downloads folder path?") + departmentName
 
-homePageRequest = requests.get(departmentLinkAddress, verify=certifi.where())
-pageHTML = BeautifulSoup(homePageRequest.content, "html.parser")
+accessRequest = requests.get(departmentLinkAddress, verify=certifi.where())
+pageHTML = BeautifulSoup(accessRequest.content, "html.parser")
 
 navigationLinks = pageHTML.find_all(class_="nav-link")
 
@@ -65,7 +67,7 @@ for parentPage in parentPages:
                 else:
                     pass
 
-pageName, linkName, linkAddress, migrationStatus, deletionStatus = [], [], [], [], []
+pageName, pageLink, docName, docLink, migrationStatus, deletionStatus = [], [], [], [], [], []
 
 for departmentPage in departmentPages:
     page = requests.get(departmentPage)
@@ -76,29 +78,42 @@ for departmentPage in departmentPages:
 
     if relevantLinks:
         for relevantLink in relevantLinks:
-            pageName.append(departmentPage)
-            linkName.append(relevantLink.get_text())
-            linkAddress.append(relevantLink.get('href'))
-            migrationStatus.append(' ')
-            deletionStatus.append(' ')
+            pageName.append(soup.find('h1', class_= 'title'))
+            pageLink.append(departmentPage)
+            docName.append(relevantLink.get_text())
+            docLink.append(relevantLink.get('href'))
+
+            # .append('') is necessary for the list to be translated into a dataframe column
+            migrationStatus.append('')
+            deletionStatus.append('')
+
     else:
-        pageName.append(departmentPage)
-        linkName.append('No links present on this page.')
-        linkAddress.append(' ')
-        migrationStatus.append(' ')
-        deletionStatus.append(' ')
+        pageName.append(soup.find('h1', class_= 'title'))
+        pageLink.append(departmentPage)
+        docName.append('No links present on this page.')
+        migrationStatus.append('')
+        deletionStatus.append('')
 
 dataFrame = pd.DataFrame(pageName, columns = ['Page Name'])
-dataFrame['Link Name'] = linkName
-dataFrame['Link Address'] = linkAddress
+dataFrame['Page Link'] = pageLink
+dataFrame['Document Name'] = docName
+dataFrame['Document Link'] = docLink
 dataFrame['Migrated to SP'] = migrationStatus
 dataFrame['Deleted off D10'] =  deletionStatus
 
-departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
+hyperlinks = []
 
-filePath = "/Users/jerynnecenario/Downloads/"
-fileName = os.path.join(filePath, departmentName)
+for pageName,pageLink in zip(dataFrame['Page Name'], dataFrame['Page Link']):
+    hyperlinks.append(f'=HYPERLINK("{pageLink}", "{pageName}") \n')
 
-dataFrame = dataFrame.to_excel(fileName + ".xlsx")
+dataFrame['Page Name'] = hyperlinks
 
-print("Downloaded: " + str(fileName))
+if not os.path.exists(folderPath):
+    os.makedirs(folderPath)
+
+filePath = os.path.join(folderPath, departmentName)
+
+dataFrame = dataFrame.drop('Page Link', axis=1)
+dataFrame = dataFrame.to_excel(filePath + ".xlsx")
+
+print("Downloaded: " + str(filePath))
