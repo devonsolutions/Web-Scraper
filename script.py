@@ -5,114 +5,115 @@ import re
 import os
 import certifi
 
-departmentLinkAddress = input("Enter the department link address ")
-departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
-folderPath = input("Enter your downloads folder path. ") + "/Downloads/" + departmentName
+DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
+DEPARTMENT_NAME = departmentLinkAddress.replace("https://www.csustan.edu/", "")
+FOLDER_PATH = input("Enter your downloads folder path. ") + "/Downloads/" + departmentName
 
-accessRequest = requests.get(departmentLinkAddress, verify=certifi.where())
-pageHTML = BeautifulSoup(accessRequest.content, "html.parser")
+ACCESS_REQUEST = requests.get(departmentLinkAddress, verify=certifi.where())
+PAGE_HTML = BeautifulSoup(accessRequest.content, "html.parser")
 
-navigationLinks = pageHTML.find_all(class_="nav-link")
+navigation_links = pageHTML.find_all(class_="nav-link")
 
-navigationHREFs = []
+navigation_HREFs = []
 
-for navigationLink in navigationLinks:
-    navigationHREFs.append(navigationLink.get('href'))
+for navigation_link in navigation_links:
+    navigation_HREFs.append(navigationLink.get('href'))
 
-departmentPath = re.split(r'/', departmentLinkAddress)
-departmentPath = departmentPath.pop(3)
-departmentPath = "/" + departmentPath + "/"
+department_path = re.split(r'/', departmentLinkAddress)
+department_path = departmentPath.pop(3)
+department_path = "/" + departmentPath + "/"
 
-universityPath = "https://www.csustan.edu"
+UNIVERSITY_PATH = "https://www.csustan.edu"
 
-parentPages = []
+parent_pages = []
 
-for navigationHREF in navigationHREFs:
-    if type(navigationHREF) == str:
-        if departmentPath in navigationHREF:
-            if universityPath in navigationHREF:
+for navigation_HREF in navigation_HREFs:
+    if type(navigation_HREF) == str:
+        if department_path in navigation_HREF:
+            if UNIVERSITY_PATH in navigation_HREF:
                 pass
             else:
-                navigationHREF = universityPath + navigationHREF
-                parentPages.append(navigationHREF)
-                print(navigationHREF)
+                navigation_HREF = UNIVERSITY_PATH + navigation_HREF
+                parentPages.append(navigation_HREF)
+                print(navigation_HREF)
         else:
             pass
     else:
         pass
 
-departmentPages = []
+department_pages = []
 
-for parentPage in parentPages:
-    departmentPages.append(parentPage)
-    parentPageRequest = requests.get(parentPage, verify=certifi.where())
-    pageHTML = BeautifulSoup(parentPageRequest.content, "html.parser")
+for parent_page in parent_pages:
+    department_pages.append(parent_page)
+    parent_page_request = requests.get(parentPage, verify=certifi.where())
+    page_html = BeautifulSoup(parent_page_request.content, "html.parser")
 
-    dropdownItems = pageHTML.find_all(class_="dropdown-item")
+    dropdown_items = pageHTML.find_all(class_="dropdown-item")
 
-    for dropdownItem in dropdownItems:
-        dropdownItemLinks = dropdownItem.find_all("a")
-        childPageHREFs = []
+    for dropdown_item in dropdown_items:
+        dropdown_item_links = dropdown_item.find_all("a")
+        child_page_HREFs = []
 
-        for dropdownItemLink in dropdownItemLinks:
-            childPageHREFs.append(dropdownItemLink.get('href'))
+        for dropdown_item_link in dropdown_item_links:
+            child_page_HREFs.append(dropdownItemLink.get('href'))
 
-        for childPageHREF in childPageHREFs:
-            if type(childPageHREF) == str:
-                if departmentPath in childPageHREF:
-                    childPageHREF = universityPath + childPageHREF
-                    departmentPages.append(childPageHREF)
-                    print(childPageHREF)
+        for child_page_HREF in child_page_HREFs:
+            if type(child_page_HREF) == str:
+                if department_path in child_page_HREF:
+                    department_path = UNIVERSITY_PATH + child_page_HREF
+                    department_pages.append(child_page_HREF)
+                    print(child_page_HREF)
                 else:
                     pass
 
-pageName, pageLink, docName, docLink, migrationStatus, deletionStatus = [], [], [], [], [], []
+page_name, page_link, document_name, document_link, migration_status, deletion_status = [], [], [], [], [], []
 
-for departmentPage in departmentPages:
-    page = requests.get(departmentPage)
+for department_page in department_pages:
+    page = requests.get(department_page)
     soup = BeautifulSoup(page.content, "html.parser")
 
-    linkPatterns = re.compile(r'sites|sharepoint|pdf|drive|doc')
-    relevantLinks = soup.find_all(href=linkPatterns)
+    LINK_PATTERNS = re.compile(r'sites|sharepoint|pdf|drive|doc')
+    relevant_links = soup.find_all(href=linkPatterns)
 
-    if relevantLinks:
-        for relevantLink in relevantLinks:
-            pageName.append(soup.find('h1', class_= 'title'))
-            pageLink.append(departmentPage)
-            docName.append(relevantLink.get_text())
-            docLink.append(relevantLink.get('href'))
+    if relevant_links:
+        for relevant_link in relevant_links:
+            page_name.append(soup.find('h1', class_= 'title'))
+            page_link.append(department_page)
+            document_name.append(relevant_link.get_text())
+            document_link.append(relevant_link.get('href'))
 
             # .append('') is necessary for the list to be translated into a dataframe column
-            migrationStatus.append('')
-            deletionStatus.append('')
+            migration_status.append('')
+            deletion_status.append('')
 
     else:
-        pageName.append(soup.find('h1', class_= 'title'))
-        pageLink.append(departmentPage)
-        docName.append('No links present on this page.')
-        migrationStatus.append('')
-        deletionStatus.append('')
+        page_name.append(soup.find('h1', class_= 'title'))
+        page_link.append(department_page)
+        document_name.append('No links present on this page.')
+        document_link.append('')
+        migration_status.append('')
+        deletion_status.append('')
 
-dataFrame = pd.DataFrame(pageName, columns = ['Page Name'])
-dataFrame['Page Link'] = pageLink
-dataFrame['Document Name'] = docName
-dataFrame['Document Link'] = docLink
-dataFrame['Migrated to SP'] = migrationStatus
-dataFrame['Deleted off D10'] =  deletionStatus
+data_frame = pd.DataFrame(page_name, columns = ['Page Name'])
+data_frame['Page Link'] = page_link
+data_frame['Document Name'] = document_name
+data_frame['Document Link'] = document_link
+data_frame['Migrated to SP'] = migration_status
+data_frame['Deleted off D10'] =  deletion_status
 
-hyperlinks = []
+hyper_links = []
 
-for pageName,pageLink in zip(dataFrame['Page Name'], dataFrame['Page Link']):
-    hyperlinks.append(f'=HYPERLINK("{pageLink}", "{pageName}") \n')
+for page_name,page_link in zip(data_frame['Page Name'], data_frame['Page Link']):
+    hyper_links.append(f'=HYPERLINK("{page_link}", "{page_name}") \n')
 
-dataFrame['Page Name'] = hyperlinks
+data_frame['Page Name'] = hyper_links
 
-if not os.path.exists(folderPath):
-    os.makedirs(folderPath)
+if not os.path.exists(FOLDER_PATH):
+    os.makedirs(FOLDER_PATH)
 
-filePath = os.path.join(folderPath, departmentName)
+file_path = os.path.join(FOLDER_PATH, DEPARTMENT_NAME)
 
-dataFrame = dataFrame.drop('Page Link', axis=1)
-dataFrame = dataFrame.to_excel(filePath + ".xlsx")
+data_frame = data_frame.drop('Page Link', axis=1)
+data_frame = data_frame.to_excel(file_path + ".xlsx")
 
-print("Downloaded: " + str(filePath))
+print("Downloaded: " + str(file_path))
