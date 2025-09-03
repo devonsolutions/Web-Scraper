@@ -12,4 +12,4 @@ This is a web scraper for Stanislaus State's Document Migration and Document Acc
 [Create a Pandas DataFrame from Lists](https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/)\
 [Python Regular Expression - Alternation and Group](https://learnbyexample.github.io/py_regular_expressions/alternation-and-grouping.html)\
 [How to Get an HREF Attribute Using BeautifulSoup](https://techjury.net/blog/how-to-get-an-href-attribute-using-beautifulsoup/)\
-[Extract Element with No Class Attribute](https://stackoverflow.com/questions/9061094/extract-element-with-no-class-attribute)\
+[Extract Element with No Class Attribute](https://stackoverflow.com/questions/9061094/extract-element-with-no-class-attribute)
