@@ -7,7 +7,7 @@ import certifi
 
 departmentLinkAddress = input("Enter the department link address ")
 departmentName = departmentLinkAddress.replace("https://www.csustan.edu/", "")
-folderPath = input("What is your Downloads folder path?") + departmentName
+folderPath = input("What is your Downloads folder path?") + "/" + departmentName
 
 accessRequest = requests.get(departmentLinkAddress, verify=certifi.where())
 pageHTML = BeautifulSoup(accessRequest.content, "html.parser")
