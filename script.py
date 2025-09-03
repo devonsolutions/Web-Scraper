@@ -5,6 +5,7 @@ import re
 import os
 import certifi
 
+UNIVERSITY_PATH = "https://www.csustan.edu"
 DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
 DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu/", "")
 FOLDER_PATH = input("Enter your downloads folder path. ") + "/Downloads/" + DEPARTMENT_NAME
@@ -23,23 +24,16 @@ department_path = re.split(r'/', DEPARTMENT_LINK_ADDRESS)
 department_path = department_path.pop(3)
 department_path = "/" + department_path + "/"
 
-UNIVERSITY_PATH = "https://www.csustan.edu"
-
 parent_pages = []
 
 for navigation_HREF in navigation_HREFs:
-    if type(navigation_HREF) == str:
-        if department_path in navigation_HREF:
-            if UNIVERSITY_PATH in navigation_HREF:
-                pass
-            else:
-                navigation_HREF = UNIVERSITY_PATH + navigation_HREF
-                parent_pages.append(navigation_HREF)
-                print(navigation_HREF)
-        else:
-            pass
+    if type(navigation_HREF) == str and UNIVERSITY_PATH and department_path in navigation_HREF:
+            navigation_HREF = UNIVERSITY_PATH + navigation_HREF
+            parent_pages.append(navigation_HREF)
+            print(navigation_HREF)
     else:
         pass
+
 
 department_pages = []
 
