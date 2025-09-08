@@ -29,7 +29,7 @@ department_path = "/" + department_path + "/"
 parent_pages = []
 
 for navigation_HREF in navigation_HREFs:
-    if type(navigation_HREF) == str and UNIVERSITY_PATH and department_path in navigation_HREF:
+    if (type(navigation_HREF) == str) and (UNIVERSITY_PATH and department_path in navigation_HREF):
         navigation_HREF = UNIVERSITY_PATH + navigation_HREF
         parent_pages.append(navigation_HREF)
         print(navigation_HREF)
