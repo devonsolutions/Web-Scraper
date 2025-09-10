@@ -12,7 +12,6 @@ DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
 DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu/", "")
 DEPARTMENT_PATH = "/" + DEPARTMENT_NAME + "/"
 
-navigation_links = PAGE_HTML.find_all(class_="nav-link")
 access_request = requests.get(DEPARTMENT_LINK_ADDRESS, verify=certifi.where())
 page_html = BeautifulSoup(access_request.content, "html.parser")
 
