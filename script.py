@@ -5,27 +5,19 @@ import requests
 import re
 import os
 import certifi
+import openpyxl
 
-UNIVERSITY_PATH = "https://www.csustan.edu"
+UNIVERSITY_LINK_ADDRESS = "https://www.csustan.edu"
 DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
 DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu/", "")
-
-FOLDER_PATH = str(Path.home() / "Downloads") + "/" + DEPARTMENT_NAME
-
-ACCESS_REQUEST = requests.get(DEPARTMENT_LINK_ADDRESS, verify=certifi.where())
-PAGE_HTML = BeautifulSoup(ACCESS_REQUEST.content, "html.parser")
-
-department_path = re.split(r'/', DEPARTMENT_LINK_ADDRESS)
-department_path = department_path.pop(3)
-department_path = "/" + department_path + "/"
+DEPARTMENT_PATH = "/" + DEPARTMENT_NAME + "/"
 
 navigation_links = PAGE_HTML.find_all(class_="nav-link")
+access_request = requests.get(DEPARTMENT_LINK_ADDRESS, verify=certifi.where())
+page_html = BeautifulSoup(access_request.content, "html.parser")
 
 navigation_HREFs = []
-department_pages, parent_pages = [], []
-child_page_HREFs = []
-page_name, page_link, document_name, document_link, migration_status, deletion_status = [], [], [], [], [], []
-hyper_links = []
+navigation_links = page_html.find_all(class_="nav-link")
 
 def add_navigation_HREF_values_to_list():
     for navigation_link in navigation_links:
@@ -33,16 +25,25 @@ def add_navigation_HREF_values_to_list():
 
 add_navigation_HREF_values_to_list()
 
+parent_pages = []
+
 def add_parent_pages_to_list():
     for navigation_HREF in navigation_HREFs:
-        if (type(navigation_HREF) == str) and (UNIVERSITY_PATH and department_path in navigation_HREF):
-            navigation_HREF = UNIVERSITY_PATH + navigation_HREF
+        if (type(navigation_HREF) == str) and (UNIVERSITY_LINK_ADDRESS and DEPARTMENT_PATH in navigation_HREF):
+            navigation_HREF = UNIVERSITY_LINK_ADDRESS + navigation_HREF
             parent_pages.append(navigation_HREF)
             print(navigation_HREF)
         else:
             pass
 
 add_parent_pages_to_list()
+
+child_page_HREFs = []
+department_pages = []
+
+# instead of having multiple functions with a child page vs parent page
+# function for passing generic page to get_request and beautifulsoup
+# function for sorting pages into lists based on regular expression
 
 def compile_child_pages():
     for parent_page in parent_pages:
@@ -59,14 +60,21 @@ def compile_child_pages():
                 child_page_HREFs.append(dropdown_item_link.get('href'))
 
             for child_page_HREF in child_page_HREFs:
-                if (type(child_page_HREF) == str) and (department_path in child_page_HREF):
-                    department_path = UNIVERSITY_PATH + child_page_HREF
+                if (type(child_page_HREF) == str) and (DEPARTMENT_PATH in child_page_HREF):
+                    child_page_HREF = UNIVERSITY_LINK_ADDRESS + child_page_HREF
                     department_pages.append(child_page_HREF)
                     print(child_page_HREF)
                 else:
                     pass
 
 compile_child_pages()
+
+page_name = []
+page_link = []
+document_name = []
+document_link = []
+migration_status = []
+deletion_status = []
 
 def assign_link_info_to_lists():
     for department_page in department_pages:
@@ -104,20 +112,22 @@ data_frame['Document Link'] = document_link
 data_frame['Migrated to SP'] = migration_status
 data_frame['Deleted off D10'] =  deletion_status
 
-for page_name,page_link in zip(data_frame['Page Name'], data_frame['Page Link']):
-    hyper_links.append(f'=HYPERLINK("{page_link}", "{page_name}") \n')
+def link_page_name_column():
+    hyper_links = []
+    for page_name,page_link in zip(data_frame['Page Name'], data_frame['Page Link']):
+        hyper_links.append(f'=HYPERLINK("{page_link}", "{page_name}") \n')
+    data_frame['Page Name'] = hyper_links
 
-data_frame['Page Name'] = hyper_links
+link_page_name_column()  
 
-file_path = os.path.join(FOLDER_PATH, DEPARTMENT_NAME)
+FOLDER_PATH = str(Path.home() / "Downloads") + "/" + DEPARTMENT_NAME
 
-def create_folder_path():
-    if not os.path.exists(FOLDER_PATH):
-        os.makedirs(FOLDER_PATH)
+if not os.path.exists(FOLDER_PATH):
+    os.makedirs(FOLDER_PATH) 
 
-create_folder_path()
+FILE_PATH = os.path.join(FOLDER_PATH, DEPARTMENT_NAME)
 
 data_frame = data_frame.drop('Page Link', axis=1)
-data_frame = data_frame.to_excel(file_path + ".xlsx")
+data_frame = data_frame.to_excel(FILE_PATH + ".xlsx")
 
-print("Downloaded: " + str(file_path))
+print("Downloaded: " + str(FILE_PATH))
