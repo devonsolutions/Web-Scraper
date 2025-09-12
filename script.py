@@ -28,22 +28,17 @@ navigation_HREFs = []
 
 pages = []
 
-def add_home_page_to_pages_list():
+def collect_home_page_html():
+    global home_page_access_request
+    global home_page_html
+    home_page_access_request = requests.get(DEPARTMENT_LINK_ADDRESS, verify=certifi.where())
+    home_page_html = BeautifulSoup(home_page_access_request.content, "html.parser")
     pages.append(DEPARTMENT_LINK_ADDRESS)
 
-add_home_page_to_pages_list()
-
-def collect_page_html():
-    global access_request
-    global page_html
-    access_request = requests.get(page, verify=certifi.where())
-    page_html = BeautifulSoup(access_request.content, "html.parser")
-
-for page in pages: 
-    def collect_page_html():
+collect_home_page_html()
 
 def identify_navigation_HREF_values():
-    navigation_links = page_html.find_all(class_="nav-link")
+    navigation_links = home_page_html.find_all(class_="nav-link")
     for navigation_link in navigation_links:
         navigation_HREFs.append(navigation_link.get('href'))
 
@@ -58,13 +53,7 @@ def collect_parent_pages():
             pass
 
 collect_parent_pages()
-
-collect_page_html()
-
-
-
-def child_pages():
-
+    
 
 print(pages)
 
