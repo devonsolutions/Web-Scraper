@@ -7,18 +7,6 @@ import os
 import certifi
 import openpyxl
 
-'''
-UNIVERSITY_LINK_ADDRESS = "https://www.csustan.edu"
-DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
-DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu/", "")
-DEPARTMENT_PATH = "/" + DEPARTMENT_NAME + "/"
-
-FOLDER_PATH = str(Path.home() / "Downloads") + "/" + DEPARTMENT_NAME
-FILE_PATH = os.path.join(FOLDER_PATH, DEPARTMENT_NAME)
-
-
-'''
-
 UNIVERSITY_LINK_ADDRESS = "https://www.csustan.edu"
 DEPARTMENT_LINK_ADDRESS = input("Enter the department link address ")
 DEPARTMENT_NAME = DEPARTMENT_LINK_ADDRESS.replace("https://www.csustan.edu", "")
@@ -26,8 +14,6 @@ DEPARTMENT_PATH = DEPARTMENT_NAME + "/"
 
 FOLDER_PATH = str(Path.home() / "Downloads") + "/" + DEPARTMENT_NAME
 FILE_PATH = os.path.join(FOLDER_PATH, DEPARTMENT_NAME)
-
-pages = []
 
 relevant_links = []
 
@@ -40,44 +26,60 @@ deletion_status = []
 
 navigation_HREFs = []
 
-# identify parent pages (set nav menu = parent pages)
-# identify child pages
-# append to pages list
-# pass the function a different value?
+pages = []
 
+def add_home_page_to_pages_list():
+    pages.append(DEPARTMENT_LINK_ADDRESS)
 
-# maybe replace with an exception / error statement?
-def is_a_parent_page():
-    if (type(navigation_HREF) == str):
-        if UNIVERSITY_LINK_ADDRESS and DEPARTMENT_PATH in navigation_HREF:
-            navigation_HREF = UNIVERSITY_LINK_ADDRESS + navigation_HREF
-            pages.append(navigation_HREF)
-        else:
-            pass
-    else:
-        pass
-        
-def collect_parent_pages():
+add_home_page_to_pages_list()
+
+def collect_page_html():
+    global access_request
+    global page_html
+    access_request = requests.get(page, verify=certifi.where())
+    page_html = BeautifulSoup(access_request.content, "html.parser")
+
+for page in pages: 
+    def collect_page_html():
+
+def identify_navigation_HREF_values():
     navigation_links = page_html.find_all(class_="nav-link")
     for navigation_link in navigation_links:
         navigation_HREFs.append(navigation_link.get('href'))
 
+identify_navigation_HREF_values()
+
+def collect_parent_pages():
     for navigation_HREF in navigation_HREFs:
-        is_a_parent_page()
+        if type(navigation_HREF) == str and (UNIVERSITY_LINK_ADDRESS and DEPARTMENT_PATH in navigation_HREF):
+            navigation_HREF = UNIVERSITY_LINK_ADDRESS + navigation_HREF
+            pages.append(navigation_HREF)
+        else:
+            pass
 
 collect_parent_pages()
+
+collect_page_html()
+
+
+
+def child_pages():
+
+
+print(pages)
+
+
+# assigned home page to pages list
+# collected home page html
+# identified nav menu
+# identified and collected parent pages into pages list
+
 
 '''
 def child_page():
     # if child page, add to list pages
 
 child_page()
-
-def collect_page_HTML():
-    global access_request
-    global page_html
-    access_request = requests.get(page, verify=certifi.where())
-    page_html = BeautifulSoup(access_request.content, "html.parser")
 
 def collect_relevant_links():
     # define a relevant link
@@ -88,13 +90,8 @@ def collect_link_info():
     # take info from relevant_links 
     # add to lists
 
-def process_pages():
-    for page in pages:
-        collect_page_HTML()
-        collect_relevant_links()
-        collect_link_info()
-
-process_pages()
+collect_relevant_links()
+collect_link_info()
 
 def assign_lists_to_data_frame():
     # assign lists to data frame
