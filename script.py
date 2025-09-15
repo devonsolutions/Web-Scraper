@@ -53,15 +53,9 @@ def collect_parent_pages():
             pass
 
 collect_parent_pages()
-    
+
 
 print(pages)
-
-
-# assigned home page to pages list
-# collected home page html
-# identified nav menu
-# identified and collected parent pages into pages list
 
 
 '''
