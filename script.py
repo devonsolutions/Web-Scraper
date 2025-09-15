@@ -54,9 +54,42 @@ def collect_parent_pages():
 
 collect_parent_pages()
 
+child_page_HREFs = []
+child_pages = []
 
-print(pages)
+def collect_child_pages():
+    dropdown_items = parent_page_html.find_all(class_="dropdown-item")
 
+    for dropdown_item in dropdown_items:
+        dropdown_item_links = dropdown_item.find_all("a")
+
+        for dropdown_item_link in dropdown_item_links:
+            child_page_HREFs.append(dropdown_item_link.get('href'))
+
+            print(child_page_HREFs)
+
+            for child_page_HREF in child_page_HREFs:
+                if (type(child_page_HREF) == str) and (DEPARTMENT_PATH in child_page_HREF):
+                    child_page_HREF = UNIVERSITY_LINK_ADDRESS + child_page_HREF
+                    child_pages.append(child_page_HREF)
+                else:
+                    print(child_page_HREF + "not available")
+
+def collect_parent_page_html():
+    for page in pages:
+        global parent_page_access_request
+        global parent_page_html
+        parent_page_access_request = requests.get(page, verify=certifi.where())
+        parent_page_html = BeautifulSoup(parent_page_access_request.content, "html.parser")
+
+        collect_child_pages()
+
+collect_parent_page_html()
+
+#for page in pages:
+   ## print(pages)
+
+#print(child_pages, sep="\n")
 
 '''
 def child_page():
