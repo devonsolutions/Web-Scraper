@@ -2,6 +2,10 @@
 
 This is a web scraper for Stanislaus State's Document Migration and Document Accessibilty Audit. It accesses Stan State web pages and documents Drupal 7, Drupal 10, and SharePoint files in an Excel spreadsheet.
 
+## To-Do
+
+1. Pull Access Request and HTML Statements out of current functions, into its own function (maybe look into Singleton pattern)
+
 
 ## Sources
 
@@ -13,3 +17,4 @@ This is a web scraper for Stanislaus State's Document Migration and Document Acc
 [Python Regular Expression - Alternation and Group](https://learnbyexample.github.io/py_regular_expressions/alternation-and-grouping.html)\
 [How to Get an HREF Attribute Using BeautifulSoup](https://techjury.net/blog/how-to-get-an-href-attribute-using-beautifulsoup/)\
 [Extract Element with No Class Attribute](https://stackoverflow.com/questions/9061094/extract-element-with-no-class-attribute)
+[How to Remove Duplicates from a List in Python?](https://pythonguides.com/remove-duplicates-from-a-list-in-python/)
